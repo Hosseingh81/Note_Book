@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
-from .models import Modelname
+from .models import Note
 from django_modelfield_tests_funcs import *
 import datetime
 import decimal
@@ -10,22 +10,22 @@ import uuid
 
 # Create your tests here.
 
-class Front_tests(TestCase):
+# class Front_tests(TestCase):
     
-    """this class is for frontend tests and tests the front functionality."""
-    def setUp(self):
-        self.url=reverse("Note_Book_app:View func or cbv name")
-        self.response=self.client.get(self.url)
-        self.context='your context that would sent from backend to front' 
+#     """this class is for frontend tests and tests the front functionality."""
+#     def setUp(self):
+#         self.url=reverse("Note_Book_app:View func or cbv name")
+#         self.response=self.client.get(self.url)
+#         self.context='your context that would sent from backend to front' 
         
-    def test_main_page_returns_200_status_code(self): #this func tests that the mainpage returns 200 status code.
-        self.assertEqual(self.response.status_code,200)
+#     def test_main_page_returns_200_status_code(self): #this func tests that the mainpage returns 200 status code.
+#         self.assertEqual(self.response.status_code,200)
 
-    def test_main_page_uses_the_correct_template(self): #this func test that the main page uses the correct template.
-        self.assertTemplateUsed(self.response,template_name="main_page.html")
+#     def test_main_page_uses_the_correct_template(self): #this func test that the main page uses the correct template.
+#         self.assertTemplateUsed(self.response,template_name="main_page.html")
     
-    def test_main_page_shows_correct_context(self): #this func test that the main page shows the correct context.
-        self.assertEqual(self.response.context['context_variable_name'],self.context)
+#     def test_main_page_shows_correct_context(self): #this func test that the main page shows the correct context.
+#         self.assertEqual(self.response.context['context_variable_name'],self.context)
 
 
 
@@ -181,11 +181,11 @@ class Backend_tests(TestCase):
             PositiveBigIntegerField_value=9223372036854775807
             PositiveBigIntegerField_name='PositiveBigIntegerField'
             field_values[PositiveBigIntegerField_name]=PositiveBigIntegerField_value
-        self.ob=Modelname.objects.create(**field_values)
+        self.ob=Note.objects.create(**field_values)
 
     def test_field_object_created_sucssefuly_class_from_django_modelfield_tests_funcs(self): # this func calls another class with its func in the django_modelfield_tests_funcs.py to test model objects data.
-        field_object_created_sucssefuly(Model_name=Number,Model_objects=self.ob).test_Model_object_creadted_sucssefuly(**self.field_values)
-        field_object_created_sucssefuly(Model_name=Number,Model_objects=self.ob).test_Model_object_data_saved_correctly(**self.field_values)
+        field_object_created_sucssefuly(Model_name=Note,Model_objects=self.ob).test_Model_object_creadted_sucssefuly(**self.field_values)
+        field_object_created_sucssefuly(Model_name=Note,Model_objects=self.ob).test_Model_object_data_saved_correctly(**self.field_values)
     
 
 
