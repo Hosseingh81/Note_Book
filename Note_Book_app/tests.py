@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 from .models import Note
-from django_modelfield_tests_funcs import *
+from .django_modelfield_tests_funcs import *
 import datetime
 import decimal
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -36,7 +36,7 @@ class Backend_tests(TestCase):
         self.BigIntegerField=False
         self.BinaryField=False
         self.BooleanField=False
-        self.CharField=False
+        self.CharField=True
         self.DateField=False
         self.DateTimeField=False
         self.DecimalField=False
@@ -51,7 +51,7 @@ class Backend_tests(TestCase):
         self.PositiveSmallIntegerField=False
         self.SlugField=False
         self.SmallIntegerField=False
-        self.TextField=False
+        self.TextField=True
         self.TimeField=False
         self.URLField=False
         self.UUIDField=False
@@ -76,7 +76,7 @@ class Backend_tests(TestCase):
 
         if self.CharField:
             CharField_value='test'
-            CharField_name='CharField'
+            CharField_name='name'
             field_values[CharField_name]=CharField_value
 
         if self.DateField:
@@ -159,7 +159,7 @@ class Backend_tests(TestCase):
 
         if self.TextField:
             TextField_value='test'
-            TextField_name='TextField'
+            TextField_name='note'
             field_values[TextField_name]=TextField_value
 
         if self.TimeField:
@@ -181,6 +181,7 @@ class Backend_tests(TestCase):
             PositiveBigIntegerField_value=9223372036854775807
             PositiveBigIntegerField_name='PositiveBigIntegerField'
             field_values[PositiveBigIntegerField_name]=PositiveBigIntegerField_value
+        self.field_values=field_values
         self.ob=Note.objects.create(**field_values)
 
     def test_field_object_created_sucssefuly_class_from_django_modelfield_tests_funcs(self): # this func calls another class with its func in the django_modelfield_tests_funcs.py to test model objects data.
