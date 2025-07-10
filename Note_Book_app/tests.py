@@ -10,22 +10,24 @@ import uuid
 
 # Create your tests here.
 
-# class Front_tests(TestCase):
+class Front_tests(TestCase):
     
-#     """this class is for frontend tests and tests the front functionality."""
-#     def setUp(self):
-#         self.url=reverse("Note_Book_app:View func or cbv name")
-#         self.response=self.client.get(self.url)
-#         self.context='your context that would sent from backend to front' 
+    """this class is for frontend tests and tests the front functionality."""
+    def setUp(self):
+        self.url=reverse("Note_Book_app:main_page")
+        # self.response=self.client.get(self.url)
+        # self.context='new_note\n' \
+        # 'pervious notes' 
         
-#     def test_main_page_returns_200_status_code(self): #this func tests that the mainpage returns 200 status code.
-#         self.assertEqual(self.response.status_code,200)
+    def test_main_page_returns_200_status_code(self): #this func tests that the mainpage returns 200 status code.
+        print("this is self.url",self.url)
+        # self.assertEqual(self.response.status_code,200)
 
-#     def test_main_page_uses_the_correct_template(self): #this func test that the main page uses the correct template.
-#         self.assertTemplateUsed(self.response,template_name="main_page.html")
+    # def test_main_page_uses_the_correct_template(self): #this func test that the main page uses the correct template.
+    #     self.assertTemplateUsed(self.response,template_name="main_page.html")
     
-#     def test_main_page_shows_correct_context(self): #this func test that the main page shows the correct context.
-#         self.assertEqual(self.response.context['context_variable_name'],self.context)
+    # def test_main_page_shows_correct_context(self): #this func test that the main page shows the correct context.
+    #     self.assertEqual(self.response.context['context_variable_name'],self.context)
 
 
 
