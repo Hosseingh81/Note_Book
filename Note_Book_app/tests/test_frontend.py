@@ -28,9 +28,8 @@ class Front_tests(TestCase):
         matches = re.findall(r'href="([^"]+)"', html_str)
         for i in range(0,len(matches)):
             self.response_main_page_links.append(self.client.get(matches[i]))
-            
-        # for i in range(0,len(self.response_main_page_links)):
-        #     self.assertEqual(self.response_main_page_links,200)
+        for i in range(0,len(self.response_main_page_links)):
+            self.assertEqual(self.response_main_page_links[i].status_code,200)
  
 
     # def test_main_page_shows_correct_context(self): #this func test that the main page shows the correct context.
