@@ -12,5 +12,5 @@ class new_note_view(TemplateView):
     template_name = "new_note.html"
 
 #this is for the previous_note page that contains links to saved notes.
-class perevious_note_view(TemplateView):
-    template_name="pervious_note.html"
+class perevious_notes_view(TemplateView):
+    template_name="pervious_notes.html"
