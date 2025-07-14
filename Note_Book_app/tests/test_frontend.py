@@ -21,7 +21,6 @@ class Front_tests(TestCase):
 
     def test_main_page_uses_the_correct_template(self): #this func test that the main page uses the correct template.
         self.assertTemplateUsed(self.response,template_name="main_page.html")
-        print("this context of the main page\n",self.response.content)
     
     def test_main_page_link_returns_200_status_code(self): #this func test that the user will redirect to a working page with 200 status code.
         self.response_main_page_links=[]
