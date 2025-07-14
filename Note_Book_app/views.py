@@ -7,3 +7,10 @@ from django.views.generic import TemplateView
 class main_page_view(TemplateView):
     template_name = "main_page.html"
 
+#this class is for the new note page that contains a form.
+class new_note_view(TemplateView):
+    template_name = "new_note.html"
+
+#this is for the previous_note page that contains links to saved notes.
+class perevious_note_view(TemplateView):
+    template_name="pervious_note.html"
