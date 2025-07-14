@@ -1,7 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
 from .django_modelfield_tests_funcs import *
-from django.core.files.uploadedfile import SimpleUploadedFile
 import re
 
 
