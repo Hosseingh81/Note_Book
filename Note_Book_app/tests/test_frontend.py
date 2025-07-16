@@ -30,6 +30,11 @@ class Front_tests(TestCase):
             self.response_main_page_links.append(self.client.get(matches[i]))
         for i in range(0,len(self.response_main_page_links)):
             self.assertEqual(self.response_main_page_links[i].status_code,200)
+
+
+    def test_new_note_page_post_data_returns_200_status_code(self): #this func tests that the new note page posts the data in its form return 200 status code.
+        self.url_new_note= reverse("Note_Book_app:new_note")
+        self.client.post(path=self.url_new_note, data={'name':'name of the note'} )
  
 
     # def test_main_page_shows_correct_context(self): #this func test that the main page shows the correct context.
