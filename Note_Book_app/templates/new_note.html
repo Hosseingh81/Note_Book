@@ -1,1 +1,7 @@
-TEST
+    <form action="{% url 'Note_Book_app:new_note' %}" method="post">
+        {% csrf_token %}
+        
+        {{ form.as_p }}
+        
+        <button type="submit">Save</button>
+    </form>

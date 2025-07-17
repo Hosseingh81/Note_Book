@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from .models import Note
 
 # Create your views here.
 
@@ -8,8 +10,10 @@ class main_page_view(TemplateView):
     template_name = "main_page.html"
 
 #this class is for the new note page that contains a form.
-class new_note_view(TemplateView):
+class new_note_view(CreateView):
     template_name = "new_note.html"
+    model = Note
+    fields = ["name","note"]
 
 #this is for the previous_note page that contains links to saved notes.
 class perevious_notes_view(TemplateView):
