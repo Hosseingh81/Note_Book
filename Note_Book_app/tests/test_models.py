@@ -6,6 +6,7 @@ import datetime
 import decimal
 from django.core.files.uploadedfile import SimpleUploadedFile
 import uuid 
+from freezegun import freeze_time
 
 
 class Backend_tests(TestCase):
@@ -165,7 +166,15 @@ class Backend_tests(TestCase):
     def test_field_object_created_sucssefuly_class_from_django_modelfield_tests_funcs(self): # this func calls another class with its func in the django_modelfield_tests_funcs.py to test model objects data.
         field_object_created_sucssefuly(Model_name=Note,Model_objects=self.ob).test_Model_object_creadted_sucssefuly(**self.field_values)
         field_object_created_sucssefuly(Model_name=Note,Model_objects=self.ob).test_Model_object_data_saved_correctly(**self.field_values)
+
+    def test_publication_date_is_set_on_creation(self): #Verifies that the timestamp is set upon object creation.
+        Note.objects.create(name="name of the note",note= "this is the note.")
+        initial_datetime = datetime.datetime(year=1971, month=1, day=1,hour=1, minute=1, second=1)
+        with freeze_time(initial_datetime) as frozen_datetime:
+            Note.objects.create(name="name of the note",note= "this is the note.")
+            self.assertEqual(Note.objects.last().published_at,initial_datetime)
+        
     
 
-
+    
 
