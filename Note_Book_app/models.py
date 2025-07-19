@@ -7,6 +7,7 @@ class Note(models.Model):
     default_name=f"note {id}"
     name=models.CharField(default=default_name)
     note=models.TextField(verbose_name="write your note here.")
+    published_at=models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name
