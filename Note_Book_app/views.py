@@ -16,5 +16,5 @@ class new_note_view(CreateView):
     fields = ["name","note"]
 
 #this is for the previous_note page that contains links to saved notes.
-class perevious_notes_view(TemplateView):
-    template_name="pervious_notes.html"
+class previous_notes_view(TemplateView):
+    template_name="previous_notes.html"
