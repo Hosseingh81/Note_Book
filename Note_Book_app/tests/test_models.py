@@ -6,6 +6,7 @@ import datetime
 import decimal
 from django.core.files.uploadedfile import SimpleUploadedFile
 import uuid 
+import pytz
 from freezegun import freeze_time
 
 
@@ -17,7 +18,7 @@ class Backend_tests(TestCase):
         self.BooleanField=False
         self.CharField=True
         self.DateField=False
-        self.DateTimeField=False
+        # self.DateTimeField=True
         self.DecimalField=False
         self.DurationField=False
         self.EmailField=False
@@ -63,10 +64,10 @@ class Backend_tests(TestCase):
             DateField_name='DateField'
             field_values[DateField_name]=DateField_value
 
-        if self.DateTimeField:
-            DateTimeField_value=datetime(2015, 10, 11, 23, 55, 59, 342380) 
-            DateTimeField_name='DateTimeField'
-            field_values[DateTimeField_name]=DateTimeField_value
+        # if self.DateTimeField:
+        #     DateTimeField_value=datetime(2015, 10, 11, 23, 55, 59, 342380) 
+        #     DateTimeField_name='Published_at'
+        #     field_values[DateTimeField_name]=DateTimeField_value
 
         if self.DecimalField:
             DecimalField_value=decimal.Decimal(9.53) 
@@ -169,12 +170,7 @@ class Backend_tests(TestCase):
 
     def test_publication_date_is_set_on_creation(self): #Verifies that the timestamp is set upon object creation.
         Note.objects.create(name="name of the note",note= "this is the note.")
-        initial_datetime = datetime.datetime(year=1971, month=1, day=1,hour=1, minute=1, second=1)
+        initial_datetime = datetime.datetime(year=1971, month=1, day=1,hour=1, minute=1, second=1,tzinfo=pytz.UTC)
         with freeze_time(initial_datetime) as frozen_datetime:
             Note.objects.create(name="name of the note",note= "this is the note.")
-            self.assertEqual(Note.objects.last().published_at,initial_datetime)
-        
-    
-
-    
-
+            self.assertEqual(Note.objects.last().Published_at.timestamp(),initial_datetime.timestamp())

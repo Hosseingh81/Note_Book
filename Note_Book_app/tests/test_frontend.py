@@ -32,11 +32,12 @@ class Front_tests(TestCase):
             self.assertEqual(self.response_main_page_links[i].status_code,200)
 
 
-    def test_new_note_page_post_data_returns_200_status_code(self): #this func tests that the new note page posts the data in its form return 302 status code.
+    def test_new_note_page_post_data_returns_302_status_code(self): #this func tests that the new note page posts the data in its form return 302 status code.
         self.url_new_note= reverse("Note_Book_app:new_note")
         form_data = {
         'name': 'My Test Note',
         'note': 'This is the content sent from the frontend.'
+        'pub'
         }
         new_note_page_post_res=self.client.post(path=self.url_new_note, data=form_data )
         self.assertEqual(new_note_page_post_res.status_code,302)
@@ -50,6 +51,8 @@ class Front_tests(TestCase):
         new_note_page_post_res=self.client.post(path=self.url_new_note, data=form_data )
         self.assertEqual(Note.objects.last().name,form_data['name'])
         self.assertEqual(Note.objects.last().note,form_data['note'])
+ 
+
 
     # def test_main_page_shows_correct_context(self): #this func test that the main page shows the correct context.
     #     self.assertEqual(self.response.context,self.context)
