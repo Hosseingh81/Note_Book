@@ -13,4 +13,4 @@ class Note(models.Model):
         return self.name
     
     def get_absolute_url(self):
-        return reverse("Note_Book_app:perevious_notes")
+        return reverse("Note_Book_app:previous_notes")

@@ -37,13 +37,12 @@ class Front_tests(TestCase):
         form_data = {
         'name': 'My Test Note',
         'note': 'This is the content sent from the frontend.'
-        'pub'
         }
         new_note_page_post_res=self.client.post(path=self.url_new_note, data=form_data )
         self.assertEqual(new_note_page_post_res.status_code,302)
  
     def test_new_note_page_post_data_saved_correctly_in_database(self): #This function verifies if the data posted to the backend is stored correctly.
-        self.url_new_note= reverse("Note_Book_app:new_note")
+        self.url_new_note= reverse('Note_Book_app:new_note')
         form_data = {
         'name': 'My Test Note',
         'note': 'This is the content sent from the frontend.'
@@ -51,7 +50,14 @@ class Front_tests(TestCase):
         new_note_page_post_res=self.client.post(path=self.url_new_note, data=form_data )
         self.assertEqual(Note.objects.last().name,form_data['name'])
         self.assertEqual(Note.objects.last().note,form_data['note'])
- 
+
+    def test_previous_page_shows_the_list_of_correctly(self): #Verifies that the note list page displays all notes correctly.
+        self.previous_page_url=reverse("Note_Book_app:previous_notes")
+        self.res_previous_page=self.client.get(self.previous_page_url)
+        for i in range(0,1):
+            Note.objects.create(name=f'note{i}',note=f'context{i}')
+            
+        self.assertContains(self.res_previous_page.content,Note.objects.all()[:10])
 
 
     # def test_main_page_shows_correct_context(self): #this func test that the main page shows the correct context.
