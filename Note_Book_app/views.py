@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from .models import Note
+from django.views.generic import ListView
 
 # Create your views here.
 
@@ -16,5 +17,7 @@ class new_note_view(CreateView):
     fields = ["name","note"]
 
 #this is for the previous_note page that contains links to saved notes.
-class previous_notes_view(TemplateView):
+class previous_notes_view(ListView):
     template_name="previous_notes.html"
+    model= Note
+    queryset=Note.objects.order_by('-id')[:10]
