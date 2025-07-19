@@ -52,13 +52,19 @@ class Front_tests(TestCase):
         self.assertEqual(Note.objects.last().note,form_data['note'])
 
     def test_previous_page_shows_the_list_of_correctly(self): #Verifies that the note list page displays all notes correctly.
+        for i in range(0,10):
+            Note.objects.create(name=f'note{i}',note=f'context{i}')
         self.previous_page_url=reverse("Note_Book_app:previous_notes")
         self.res_previous_page=self.client.get(self.previous_page_url)
-        for i in range(0,1):
-            Note.objects.create(name=f'note{i}',note=f'context{i}')
-            
-        self.assertContains(self.res_previous_page.content,Note.objects.all()[:10])
+        # self.assertContains(self.res_previous_page.content.decode('utf-8'),str(Note.objects.all()[:10]))
+        extracted_notes = []
 
-
+        for item in list(Note.objects.all().order_by('-id')[:10]):
+            s = str(item)  # تبدیل آبجکت به رشته
+            match = re.search(r'note\d+', s)
+            if match:
+                extracted_notes.append(match.group())
+        notes_in_content = re.findall(r'<li>(.*?)</li>',self.res_previous_page.content.decode('utf-8'))
+        self.assertEqual(notes_in_content,extracted_notes)
     # def test_main_page_shows_correct_context(self): #this func test that the main page shows the correct context.
     #     self.assertEqual(self.response.context,self.context)
