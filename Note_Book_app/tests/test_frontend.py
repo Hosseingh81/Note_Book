@@ -3,6 +3,7 @@ from django.urls import reverse
 from .django_modelfield_tests_funcs import *
 import re
 from Note_Book_app.models import Note
+from bs4 import BeautifulSoup
 
 
 
@@ -54,17 +55,38 @@ class Front_tests(TestCase):
     def test_previous_page_shows_the_list_of_correctly(self): #Verifies that the note list page displays all notes correctly.
         for i in range(0,10):
             Note.objects.create(name=f'note{i}',note=f'context{i}')
-        self.previous_page_url=reverse("Note_Book_app:previous_notes")
-        self.res_previous_page=self.client.get(self.previous_page_url)
+        previous_page_url=reverse("Note_Book_app:previous_notes")
+        res_previous_page=self.client.get(previous_page_url)
         # self.assertContains(self.res_previous_page.content.decode('utf-8'),str(Note.objects.all()[:10]))
         extracted_notes = []
 
         for item in list(Note.objects.all().order_by('-id')[:10]):
-            s = str(item)  # تبدیل آبجکت به رشته
+            s = str(item)  
             match = re.search(r'note\d+', s)
             if match:
                 extracted_notes.append(match.group())
-        notes_in_content = re.findall(r'<li>(.*?)</li>',self.res_previous_page.content.decode('utf-8'))
+
+        soup = BeautifulSoup(res_previous_page.content, 'html.parser')
+        notes_in_content = [a.get_text(strip=True) for a in soup.find_all('a')]
         self.assertEqual(notes_in_content,extracted_notes)
-    # def test_main_page_shows_correct_context(self): #this func test that the main page shows the correct context.
-    #     self.assertEqual(self.response.context,self.context)
+
+
+    def test_previous_note_page_links_to_related_notes_return_200_status_code(self): # Verifies that the Previous_note page links is related correctly to its note.
+        for i in range(0,10):
+            Note.objects.create(name=f'note{i}',note=f'context{i}')
+        
+
+        previous_page_url=reverse("Note_Book_app:previous_notes")
+        res_previous_page=self.client.get(previous_page_url)
+        html_str = res_previous_page.content.decode('utf-8')
+        hrefs = re.findall(r'href="([^"]+)"', html_str)
+        unique_hrefs = list(set(hrefs))
+        notes_url=unique_hrefs[0].replace('<int:note>', f'<i>')
+        print(notes_url)
+        for i in range(0,10):
+            self.assertEqual(self.client.get(unique_hrefs[0].replace('<int:note>', f'<{i}>')),200)
+            print(unique_hrefs[0].replace('<int:note>', f'{i}'))
+
+
+
+
