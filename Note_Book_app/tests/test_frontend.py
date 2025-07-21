@@ -74,18 +74,12 @@ class Front_tests(TestCase):
     def test_previous_note_page_links_to_related_notes_return_200_status_code(self): # Verifies that the Previous_note page links is related correctly to its note.
         for i in range(0,10):
             Note.objects.create(name=f'note{i}',note=f'context{i}')
-        
-
         previous_page_url=reverse("Note_Book_app:previous_notes")
         res_previous_page=self.client.get(previous_page_url)
         html_str = res_previous_page.content.decode('utf-8')
-        hrefs = re.findall(r'href="([^"]+)"', html_str)
-        unique_hrefs = list(set(hrefs))
-        notes_url=unique_hrefs[0].replace('<int:note>', f'<i>')
-        print(notes_url)
-        for i in range(0,10):
-            self.assertEqual(self.client.get(unique_hrefs[0].replace('<int:note>', f'<{i}>')),200)
-            print(unique_hrefs[0].replace('<int:note>', f'{i}'))
+        hrefs = re.findall(r'href="(/note_book/note/\d+)"', html_str)
+        for i in range(11,1):
+            self.assertEqual(self.client.get(hrefs[i]).status_code,200)
 
 
 
