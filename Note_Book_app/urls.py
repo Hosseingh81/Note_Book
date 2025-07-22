@@ -8,4 +8,5 @@ urlpatterns = [
     path("",views.main_page_view.as_view(),name='main_page'),
     path("new_note",views.new_note_view.as_view(),name='new_note'),
     path("previous_notes",views.previous_notes_view.as_view(),name='previous_notes'),
+    path("note/<int:pk>",views.note_view.as_view(),name='note_detail_page'),
 ]
