@@ -2,7 +2,8 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from .models import Note
-from django.views.generic import ListView
+from django.views.generic import ListView,DetailView
+
 
 # Create your views here.
 
@@ -21,3 +22,10 @@ class previous_notes_view(ListView):
     template_name="previous_notes.html"
     model= Note
     queryset=Note.objects.order_by('-id')[:10]
+
+class note_view(DetailView):
+    model=Note
+    template_name='note_detail.html'
+    context_object_name = 'note'
+
+
