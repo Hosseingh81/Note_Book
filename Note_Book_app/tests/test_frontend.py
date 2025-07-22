@@ -51,7 +51,7 @@ class Front_tests(TestCase):
         new_note_page_post_res=self.client.post(path=self.url_new_note, data=form_data )
         self.assertEqual(Note.objects.last().name,form_data['name'])
         self.assertEqual(Note.objects.last().note,form_data['note'])
-
+    #from 
     def test_previous_page_shows_the_list_of_correctly(self): #Verifies that the note list page displays all notes correctly.
         for i in range(0,10):
             Note.objects.create(name=f'note{i}',note=f'context{i}')
@@ -78,9 +78,26 @@ class Front_tests(TestCase):
         res_previous_page=self.client.get(previous_page_url)
         html_str = res_previous_page.content.decode('utf-8')
         hrefs = re.findall(r'href="(/note_book/note/\d+)"', html_str)
-        for i in range(11,1):
+        for i in range(0,10):
             self.assertEqual(self.client.get(hrefs[i]).status_code,200)
 
-
-
-
+    def test_new_note_page_shows_the_expected_note(self): #Verfies that the new_note page shows the expected note.
+        for i in range(0,10):
+            Note.objects.create(name=f'note{i}',note=f'context{i}')
+        previous_page_url=reverse("Note_Book_app:previous_notes")
+        res_previous_page=self.client.get(previous_page_url)
+        objects_name=[]
+        objects_context=[]
+        note_name_from_html=[]
+        note_context_from_html=[]
+        html_str = res_previous_page.content.decode('utf-8')
+        hrefs = re.findall(r'href="(/note_book/note/\d+)"', html_str)
+        print(self.client.get(hrefs[i]).content)
+        for i in range(9,-1,-1):       
+            objects_name.append(Note.objects.all()[i].name)
+            objects_context.append(Note.objects.all()[i].note)
+        for i in range(0,10):
+            self.assertInHTML(objects_name[i],self.client.get(hrefs[i]).content.decode('utf-8'))
+            self.assertInHTML(objects_context[i],self.client.get(hrefs[i]).content.decode('utf-8'))
+            print(objects_name[i])
+            print(objects_context[i])
