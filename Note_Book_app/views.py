@@ -21,7 +21,8 @@ class new_note_view(CreateView):
 class previous_notes_view(ListView):
     template_name="previous_notes.html"
     model= Note
-    queryset=Note.objects.order_by('-id')[:10]
+    paginate_by=10
+    ordering=['-Published_at']
 
 class note_view(DetailView):
     model=Note
