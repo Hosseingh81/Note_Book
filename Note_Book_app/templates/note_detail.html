@@ -1,3 +1,9 @@
+
+
 <h1>{{ note.name }}</h1>
 <p>{{ note.note }}</p>
 <p>{{ note.Published_at }}</p>
+
+
+<h3><a href="{% url 'Note_Book_app:new_note' %}">add a new note</a></h1>
+<h3><a href="{% url 'Note_Book_app:previous_notes' %}">previous notes page</a></h1>

@@ -2,7 +2,7 @@
 
     {% for object in object_list %} 
 
-    <li><a href="/note_book/note/{{object.id}}">{{ object.name }}</a></li>  
+<li><a href="{% url 'Note_Book_app:note_detail_page' pk=object.id %}">{{ object.name }}</a></li>  
   
     <hr/> 
     {% empty %} 
