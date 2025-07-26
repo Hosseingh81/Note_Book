@@ -174,3 +174,9 @@ class Backend_tests(TestCase):
         with freeze_time(initial_datetime) as frozen_datetime:
             Note.objects.create(name="name of the note",note= "this is the note.")
             self.assertEqual(Note.objects.last().Published_at.timestamp(),initial_datetime.timestamp())
+
+
+    def test_name_feild_is_auto_generated_when_null(self): #Verifies that the name field will auto generated from pk if it is null.
+        Note.objects.create(note="this is note.")
+        expected_name=f"note {Note.objects.last().pk}"
+        self.assertEqual(Note.objects.last().name,expected_name)
