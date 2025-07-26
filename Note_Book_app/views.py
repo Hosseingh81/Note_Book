@@ -24,6 +24,7 @@ class previous_notes_view(ListView):
     paginate_by=10
     ordering=['-Published_at']
 
+#this function shows the detail of a created view.
 class note_view(DetailView):
     model=Note
     template_name='note_detail.html'
