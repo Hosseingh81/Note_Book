@@ -4,18 +4,22 @@ from django.urls import reverse
 # Create your models here.
 
 class Note(models.Model):
-    name=models.CharField(blank=True)
-    note=models.TextField(verbose_name="write your note here.")
-    Published_at=models.DateTimeField(auto_now_add=True)
+    """
+    this function is the Note model of the Note_Book_app of the Note_Book django project.
+    in front of each field and each function you can see it's discription.
+    """
+    name=models.CharField(blank=True) # this is the name field of the model.
+    note=models.TextField(verbose_name="write your note here.") #this is the note field of the model.
+    Published_at=models.DateTimeField(auto_now_add=True) #this is published_at field of the model that saves the time whenever note is published.
 
-    def __str__(self):
+    def __str__(self): # shows the name field of the note.
         return self.name
     
-    def get_absolute_url(self):
-        return reverse("Note_Book_app:previous_notes")
+    def get_absolute_url(self): #Returns the canonical URL for a single note instance.
+        return reverse("Note_Book_app:note_detail_page", kwargs={'pk': self.pk})
     
 
-    def save(self,*args, **kwargs):
+    def save(self,*args, **kwargs): #this function auto generate field name from pk if field name is null.
         creating=self.pk is None
         super().save(*args, **kwargs)
 
