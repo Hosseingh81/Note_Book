@@ -110,6 +110,7 @@ class Front_tests(TestCase):
 
 
     def test_edit_note_page_post_request_retruns_302_status_code(self): #Verifies that a POST request to the edit_note page returns a 302 status code.
+        Note.objects.create(name="note 0",note='context 0')
         note_id=Note.objects.last().id
         form_data = {
         'name': 'Edited Note',
@@ -119,4 +120,14 @@ class Front_tests(TestCase):
         self.assertEqual(edit_note_res.status_code,302)
 
 
-    
+    def test_edit_note_post_updates_note_object(self): #Verifies that submitting the edit form successfully updates the note in the database.
+        Note.objects.create(name="note 0",note='context 0')
+        note_id=Note.objects.last().id
+        form_data = {
+        'name': 'Edited Note 0',
+        'note': 'edited context 0.'
+        }
+        edit_note_res=self.client.post(path=reverse("Note_Book_app:edit_note",kwargs={'pk':note_id}),data=form_data)
+        self.assertEqual(form_data["name"],Note.objects.last().name)
+        self.assertEqual(form_data["note"],Note.objects.last().note)
+        
