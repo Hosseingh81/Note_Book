@@ -102,6 +102,13 @@ class Front_tests(TestCase):
             self.assertInHTML(objects_name[i],self.client.get(hrefs[i]).content.decode('utf-8'))
             self.assertInHTML(objects_context[i],self.client.get(hrefs[i]).content.decode('utf-8'))
 
+        
+    def test_edit_note_page_returns_200_status_code(self): #Verifies that edit_note page returns 200 status code.
+        Note.objects.create(note="note 0")
+        note_id=Note.objects.last().id
+        edit_note_res=self.client.get(reverse("Note_Book_app:edit_note",kwargs={'pk':note_id}))
+        self.assertEqual(edit_note_res.status_code,200)
+
 
 
 
