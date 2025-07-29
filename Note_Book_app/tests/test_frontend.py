@@ -3,7 +3,6 @@ from django.urls import reverse
 from .django_modelfield_tests_funcs import *
 import re
 from Note_Book_app.models import Note
-from bs4 import BeautifulSoup
 
 
 
@@ -110,7 +109,14 @@ class Front_tests(TestCase):
         self.assertEqual(edit_note_res.status_code,200)
 
 
-
+    def test_edit_note_page_post_request_retruns_302_status_code(self): #Verifies that a POST request to the edit_note page returns a 302 status code.
+        note_id=Note.objects.last().id
+        form_data = {
+        'name': 'Edited Note',
+        'note': 'This is the edited content sent from the frontend.'
+        }
+        edit_note_res=self.client.post(path=reverse("Note_Book_app:edit_note",kwargs={'pk':note_id}),data=form_data)
+        self.assertEqual(edit_note_res.status_code,302)
 
 
     
