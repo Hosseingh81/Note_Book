@@ -31,3 +31,7 @@ class note_view(DetailView):
     context_object_name = 'note'
 
 
+class edit_note_view(UpdateView):
+    model=Note
+    template_name='new_note.html'
+    fields=["name","note"]
