@@ -11,6 +11,7 @@ class Note(models.Model):
     name=models.CharField(blank=True) # this is the name field of the model.
     note=models.TextField(verbose_name="write your note here.") #this is the note field of the model.
     Published_at=models.DateTimeField(auto_now_add=True) #this is published_at field of the model that saves the time whenever note is published.
+    Update_at=models.DateTimeField(auto_now=True) #this is Upadted_at field of the model that stores the time when the object is updated.
 
     def __str__(self): # shows the name field of the note.
         return self.name
