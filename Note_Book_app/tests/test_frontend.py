@@ -137,5 +137,7 @@ class Front_tests(TestCase):
         Note.objects.create(note="note 0")
         note_id=Note.objects.last().id
         edit_note_res=self.client.get(reverse("Note_Book_app:note_detail_page",kwargs={'pk':note_id}))
-        print(edit_note_res.content)
-        
+        html_str=edit_note_res.content.decode('utf-8')
+        match = re.search(r'/note_book/delete_note/\d+', html_str)
+        delete_note_res=self.client.get(reverse(match))
+        self.assertEqual(delete_note_res.status_code,200)
