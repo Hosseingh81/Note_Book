@@ -1,10 +1,14 @@
+    {%if object%}
+    <form action="{% url 'Note_Book_app:edit_note' object.pk %}" method="post">
+{% else %}
     <form action="{% url 'Note_Book_app:new_note' %}" method="post">
+{%endif%}
         {% csrf_token %}
         
         {{ form.as_p }}
         
         <button type="submit">Save</button>
     </form>
-
+{{object.note}}
 
 <a href="{% url 'Note_Book_app:previous_notes' %}">Previous Notes</a></p>
