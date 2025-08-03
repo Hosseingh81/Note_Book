@@ -98,8 +98,8 @@ class Front_tests(TestCase):
             objects_name.append(Note.objects.all()[i].name)
             objects_context.append(Note.objects.all()[i].note)
         for i in range(0,10):
-            self.assertInHTML(objects_name[i],self.client.get(hrefs[i]).content.decode('utf-8'))
-            self.assertInHTML(objects_context[i],self.client.get(hrefs[i]).content.decode('utf-8'))
+            self.assertContains(self.client.get(hrefs[i]),objects_name[i])
+            self.assertContains(self.client.get(hrefs[i]),objects_context[i])
 
         
     def test_edit_note_page_returns_200_status_code(self): #Verifies that edit_note page returns 200 status code.
@@ -130,4 +130,12 @@ class Front_tests(TestCase):
         edit_note_res=self.client.post(path=reverse("Note_Book_app:edit_note",kwargs={'pk':note_id}),data=form_data)
         self.assertEqual(form_data["name"],Note.objects.last().name)
         self.assertEqual(form_data["note"],Note.objects.last().note)
+
+
+
+    # def test_detail_page_contains_valid_delete_link(self): #Verifies that the detail_page contains valid delete_link and delete_link returns 200 status code.
+    #     Note.objects.create(note="note 0")
+    #     note_id=Note.objects.last().id
+    #     edit_note_res=self.client.get(reverse("Note_Book_app:edit_note",kwargs={'pk':note_id}))
+    #     print(edit_note_res.content)
         
