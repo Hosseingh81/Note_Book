@@ -133,9 +133,9 @@ class Front_tests(TestCase):
 
 
 
-    # def test_detail_page_contains_valid_delete_link(self): #Verifies that the detail_page contains valid delete_link and delete_link returns 200 status code.
-    #     Note.objects.create(note="note 0")
-    #     note_id=Note.objects.last().id
-    #     edit_note_res=self.client.get(reverse("Note_Book_app:edit_note",kwargs={'pk':note_id}))
-    #     print(edit_note_res.content)
+    def test_detail_page_contains_valid_delete_link(self): #Verifies that the detail_page contains valid delete_link and delete_link returns 200 status code.
+        Note.objects.create(note="note 0")
+        note_id=Note.objects.last().id
+        edit_note_res=self.client.get(reverse("Note_Book_app:note_detail_page",kwargs={'pk':note_id}))
+        print(edit_note_res.content)
         
