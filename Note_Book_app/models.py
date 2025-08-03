@@ -21,10 +21,8 @@ class Note(models.Model):
     
 
     def save(self,*args, **kwargs): #this function auto generate field name from pk if field name is null.
-        creating=self.pk is None
         super().save(*args, **kwargs)
 
-
-        if creating and not self.name:
+        if not self.name:
             self.name = f"note {self.pk}"
             super().save(update_fields=['name'])
