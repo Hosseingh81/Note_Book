@@ -10,4 +10,5 @@ urlpatterns = [
     path("previous_notes",views.previous_notes_view.as_view(),name='previous_notes'),
     path("note/<int:pk>",views.note_view.as_view(),name='note_detail_page'),
     path("edit_note/<int:pk>",views.edit_note_view.as_view(),name='edit_note'),
+    path("delete_note/<int:pk>",views.delete_note_view.as_view(),name='delete_note'),
 ]
