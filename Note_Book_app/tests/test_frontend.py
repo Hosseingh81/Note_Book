@@ -141,3 +141,11 @@ class Front_tests(TestCase):
         match = re.search(r'/note_book/delete_note/\d+', html_str)
         delete_note_res=self.client.get(match.group())
         self.assertEqual(delete_note_res.status_code,200)
+
+
+
+    def test_delete_note_confirmation_page_uses_correct_template(self): #Verifies that the delete_note_confiramation_page uses the correct template.
+        Note.objects.create(note="note 0")
+        delete_note_confirmation_res=self.client.get(reverse("Note_Book_app:delete_note",kwargs={'pk':Note.objects.last().id}))
+        print(delete_note_confirmation_res)
+        self.assertTemplateUsed(delete_note_confirmation_res,template_name='delete_note_confirmation.html')
