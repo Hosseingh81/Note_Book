@@ -39,5 +39,5 @@ class edit_note_view(UpdateView):
 
 class delete_note_view(DeleteView):
     model = Note
-    template_name='delete_note.html'
-    success_url = reverse_lazy("Note_Book_app:delete_note")
+    template_name='delete_note_confirmation.html'
+    success_url = reverse_lazy("Note_Book_app:previous_notes")
