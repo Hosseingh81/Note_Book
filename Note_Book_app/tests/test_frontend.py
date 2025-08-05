@@ -147,5 +147,19 @@ class Front_tests(TestCase):
     def test_delete_note_confirmation_page_uses_correct_template(self): #Verifies that the delete_note_confiramation_page uses the correct template.
         Note.objects.create(note="note 0")
         delete_note_confirmation_res=self.client.get(reverse("Note_Book_app:delete_note",kwargs={'pk':Note.objects.last().id}))
-        print(delete_note_confirmation_res)
         self.assertTemplateUsed(delete_note_confirmation_res,template_name='delete_note_confirmation.html')
+
+
+    def test_delete_note_confirmation_page_post_redirects_to_previous_notes_page_and_delete_the_specified_note(self): #Verifies that when the user accept the deletation, it will redirects to previous_notes page and it deletes the specified note.
+        Note.objects.create(note="note 0")
+        expected_redirect_url=reverse("Note_Book_app:previous_notes")
+        note_id=Note.objects.get(note='note 0').id
+        delete_note_confirmation_url=reverse("Note_Book_app:delete_note",kwargs={'pk':note_id})
+        delete_note_confirmation_post_res=self.client.post(delete_note_confirmation_url,kwargs={'pk':note_id})
+        self.assertEqual(delete_note_confirmation_post_res.status_code,302)
+        redirected_url_from_delete_note_confimation_page=delete_note_confirmation_post_res.headers.get('Location')
+        self.assertEqual(redirected_url_from_delete_note_confimation_page,expected_redirect_url)
+        with self.assertRaises(Note.DoesNotExist):
+            Note.objects.get(id=note_id)
+        
+
