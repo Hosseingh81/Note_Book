@@ -4,6 +4,7 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from .models import Note
 from django.views.generic import ListView,DetailView
 from django.urls import reverse_lazy
+from django.contrib import messages
 
 
 # Create your views here.
@@ -41,3 +42,8 @@ class delete_note_view(DeleteView):
     model = Note
     template_name='delete_note_confirmation.html'
     success_url = reverse_lazy("Note_Book_app:previous_notes")
+    def post(self, request, *args, **kwargs):
+        self.object=self.get_object()
+        response=super().post(request, *args, **kwargs)
+        messages.success(request,f"the {self.object} was successfully deleted!")
+        return response
