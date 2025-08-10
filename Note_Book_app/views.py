@@ -5,6 +5,7 @@ from .models import Note
 from django.views.generic import ListView,DetailView
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.contrib.messages.views import SuccessMessageMixin
 
 
 # Create your views here.
@@ -33,11 +34,18 @@ class note_view(DetailView):
     context_object_name = 'note'
 
 
+#This function edit notes.
 class edit_note_view(UpdateView):
     model=Note
     template_name='new_note.html'
     fields=["name","note"]
+    def post(self, request, *args, **kwargs):
+        self.object=self.get_object()
+        response=super().post(request, *args, **kwargs)
+        messages.success(request,f"the {self.object} was successfully edited!")
+        return response
 
+#this function delete notes.
 class delete_note_view(DeleteView):
     model = Note
     template_name='delete_note_confirmation.html'
