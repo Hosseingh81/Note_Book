@@ -151,6 +151,21 @@ class Front_tests(TestCase):
         self.assertEqual(form_data["note"],Note.objects.last().note)
 
 
+    def test_editing_note_displays_success_message(self): #Verifies that a success message is displayed after a note is edited.
+        Note.objects.create(note="note 0")
+        edit_note__url=reverse("Note_Book_app:edit_note",kwargs={'pk':Note.objects.get(note='note 0').id})
+        form_data = {
+        'name': 'Edited Note 0',
+        'note': 'edited context 0.'
+        }
+        edit_note_post_res=self.client.post(edit_note__url,kwargs={'pk':Note.objects.get(note='note 0').id},data=form_data)
+        messages = list(get_messages(edit_note_post_res.wsgi_request))
+        redirected_url_from_edit_note_page=edit_note_post_res.headers.get('Location')
+        response=self.client.get(redirected_url_from_edit_note_page)
+        self.assertContains(response,messages[0])   
+
+
+
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>        delete_note_page_test
 
