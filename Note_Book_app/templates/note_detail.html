@@ -1,9 +1,14 @@
 
 
-<h1>{{ note.name }}</h1>
-<p>{{ note.note }}</p>
-<p>{{ note.Published_at }}</p>
+<h1>note title: {{ note.name }}</h1>
+<p>note context: {{ note.note }}</p>
+<p>publish time: {{ note.Published_at }}</p>
+<p>id of the note: {{ note.id }}</p>
+<p>Update time: {{ note.Update_at }}</p>
 
 
-<h3><a href="{% url 'Note_Book_app:new_note' %}">add a new note</a></h1>
-<h3><a href="{% url 'Note_Book_app:previous_notes' %}">previous notes page</a></h1>
+<h3><a href="{% url 'Note_Book_app:new_note' %}">add a new note</a></h3>
+<h3><a href="{% url 'Note_Book_app:previous_notes' %}">previous notes page</a></h3>
+<h3><a href="{% url 'Note_Book_app:edit_note' pk=note.id %}">edit note</a></h3> 
+<h3><a href="{% url 'Note_Book_app:delete_note' pk=note.id %}">delete_note</a></h3> 
+
