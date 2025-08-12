@@ -6,3 +6,17 @@
   
 <a href="{% url 'Note_Book_app:new_note' %}">New_note</a></p>
 <a href="{% url 'Note_Book_app:previous_notes' %}">Previous Notes</a></p>
+
+
+{% if user.is_authenticated %}
+    <span>سلام، {{ user.username }}!</span>
+    
+    <form action="{% url 'logout' %}" method="post" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit">logout</button>
+    </form>
+
+{% else %}
+    <a href="{% url 'login' %}">login</a>
+    {% comment %} <a href="{% url 'signup' %}">signup</a> {% endcomment %}
+{% endif %}
