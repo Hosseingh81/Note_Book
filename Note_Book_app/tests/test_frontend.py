@@ -11,13 +11,17 @@ from django.contrib.auth.models import User
 # Create your tests here.
 
 class Front_tests(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user = User.objects.create_user(username='test', password='123')
     
     """this class is for frontend tests and tests the front functionality."""
     def setUp(self):
         self.url=reverse("Note_Book_app:main_page")
         self.response=self.client.get(self.url)
         self.url_new_note= reverse("Note_Book_app:new_note")
-        self.user=User.objects.create_user(username="user", password="1234")
+        # self.user=User.objects.create_user(username="user", password="1234")
 
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>        main_page_test
