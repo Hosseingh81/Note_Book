@@ -33,7 +33,7 @@ class previous_notes_view(LoginRequiredMixin,ListView):
     ordering=['-Published_at']
 
 #this function shows the detail of a created view.
-class note_view(DetailView):
+class note_view(LoginRequiredMixin,DetailView):
     model=Note
     template_name='note_detail.html'
     context_object_name = 'note'
