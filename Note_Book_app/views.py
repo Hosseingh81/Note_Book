@@ -51,7 +51,7 @@ class edit_note_view(LoginRequiredMixin,UpdateView):
         return response
 
 #this function delete notes.
-class delete_note_view(DeleteView):
+class delete_note_view(LoginRequiredMixin,DeleteView):
     model = Note
     template_name='delete_note_confirmation.html'
     success_url = reverse_lazy("Note_Book_app:previous_notes")

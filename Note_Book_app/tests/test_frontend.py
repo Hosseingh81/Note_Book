@@ -80,6 +80,15 @@ class Front_tests(TestCase):
         self.client.post(path=self.url_new_note, data=form_data )
         self.assertEqual(Note.objects.last().name,form_data['name'])
         self.assertEqual(Note.objects.last().note,form_data['note'])
+    
+    def test_note_creation_assigns_correct_user(self):
+        self.client.force_login(self.user)
+        form_data = {
+        'name': 'Edited Note 0',
+        'note': 'edited context 0.'
+        }
+        new_note_page_post_res=self.client.post(path=self.url_new_note, data=form_data )
+        self.assertEqual(new_note_page_post_res.wsgi_request.user,Note.objects.last().user)
 
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>        previous_notes_page_test
@@ -217,26 +226,35 @@ class Front_tests(TestCase):
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>        delete_note_page_test
 
+    def test_delete_note_page_page_redirects_anonymous_user_to_login(self): #Verfies that anonymous user can't access the delete_note_page_page and it will redirect to login_page.
+        Note.objects.create(note="note 0")
+        note_id=Note.objects.last().id
+        delete_note_page_url=reverse("Note_Book_app:note_detail_page",kwargs={'pk':note_id})
+        response=self.client.get(delete_note_page_url)
+        self.assertEqual(response.status_code,302)
+        self.assertEqual(response.headers.get('Location'),'/accounts/login/?next=/note_book/note/1')
 
-
-    # def test_detail_page_contains_valid_delete_link(self): #Verifies that the detail_page contains valid delete_link and delete_link returns 200 status code.
-    #     Note.objects.create(note="note 0")
-    #     note_id=Note.objects.last().id
-    #     edit_note_res=self.client.get(reverse("Note_Book_app:note_detail_page",kwargs={'pk':note_id}))
-    #     html_str=edit_note_res.content.decode('utf-8')
-    #     match = re.search(r'/note_book/delete_note/\d+', html_str)
-    #     delete_note_res=self.client.get(match.group())
-    #     self.assertEqual(delete_note_res.status_code,200)
+    def test_detail_page_contains_valid_delete_link(self): #Verifies that the detail_page contains valid delete_link and delete_link returns 200 status code.
+        self.client.force_login(self.user)
+        Note.objects.create(note="note 0")
+        note_id=Note.objects.last().id
+        edit_note_res=self.client.get(reverse("Note_Book_app:note_detail_page",kwargs={'pk':note_id}))
+        html_str=edit_note_res.content.decode('utf-8')
+        match = re.search(r'/note_book/delete_note/\d+', html_str)
+        delete_note_res=self.client.get(match.group())
+        self.assertEqual(delete_note_res.status_code,200)
 
 
 
     def test_delete_note_confirmation_page_uses_correct_template(self): #Verifies that the delete_note_confiramation_page uses the correct template.
+        self.client.force_login(self.user)
         Note.objects.create(note="note 0")
         delete_note_confirmation_res=self.client.get(reverse("Note_Book_app:delete_note",kwargs={'pk':Note.objects.last().id}))
         self.assertTemplateUsed(delete_note_confirmation_res,template_name='delete_note_confirmation.html')
 
 
     def test_delete_note_confirmation_page_post_redirects_to_previous_notes_page_and_delete_the_specified_note(self): #Verifies that when the user accept the deletation, it will redirects to previous_notes page and it deletes the specified note.
+        self.client.force_login(self.user)
         Note.objects.create(note="note 0")
         expected_redirect_url=reverse("Note_Book_app:previous_notes")
         note_id=Note.objects.get(note='note 0').id
@@ -249,25 +267,19 @@ class Front_tests(TestCase):
             Note.objects.get(id=note_id)
 
 
-    # def test_deleting_note_displays_success_message(self): #Verifies that a success message is displayed after a note is deleted.
-    #     Note.objects.create(note="note 0")
-    #     delete_note_confirmation_url=reverse("Note_Book_app:delete_note",kwargs={'pk':Note.objects.get(note='note 0').id})
-    #     delete_note_confirmation_post_res=self.client.post(delete_note_confirmation_url,kwargs={'pk':Note.objects.get(note='note 0').id})
-    #     messages = list(get_messages(delete_note_confirmation_post_res.wsgi_request))
-    #     redirected_url_from_delete_note_confimation_page=delete_note_confirmation_post_res.headers.get('Location')
-    #     response=self.client.get(redirected_url_from_delete_note_confimation_page)
-    #     self.assertContains(response,messages[0])
-
-
-
-    def test_note_creation_assigns_correct_user(self):
+    def test_deleting_note_displays_success_message(self): #Verifies that a success message is displayed after a note is deleted.
         self.client.force_login(self.user)
-        form_data = {
-        'name': 'Edited Note 0',
-        'note': 'edited context 0.'
-        }
-        new_note_page_post_res=self.client.post(path=self.url_new_note, data=form_data )
-        self.assertEqual(new_note_page_post_res.wsgi_request.user,Note.objects.last().user)
+        Note.objects.create(note="note 0")
+        delete_note_confirmation_url=reverse("Note_Book_app:delete_note",kwargs={'pk':Note.objects.get(note='note 0').id})
+        delete_note_confirmation_post_res=self.client.post(delete_note_confirmation_url,kwargs={'pk':Note.objects.get(note='note 0').id})
+        messages = list(get_messages(delete_note_confirmation_post_res.wsgi_request))
+        redirected_url_from_delete_note_confimation_page=delete_note_confirmation_post_res.headers.get('Location')
+        response=self.client.get(redirected_url_from_delete_note_confimation_page)
+        self.assertContains(response,messages[0])
+
+
+
+
 
         
 
