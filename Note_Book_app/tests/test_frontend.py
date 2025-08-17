@@ -19,24 +19,32 @@ class Front_tests(TestCase):
     """this class is for frontend tests and tests the front functionality."""
     def setUp(self):
         self.url=reverse("Note_Book_app:main_page")
-        self.response=self.client.get(self.url)
         self.url_new_note= reverse("Note_Book_app:new_note")
-        # self.user=User.objects.create_user(username="user", password="1234")
-
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>        main_page_test
 
+    def test_main_page_redirects_anonymous_user_to_login(self): #Verfies that anonymous user can't access the main_page and it will redirect to login_page.
+        self.response=self.client.get(self.url)
+        self.assertEqual(self.response.status_code,302)
+        self.assertEqual(self.response.headers.get('Location'),'/accounts/login/?next=/note_book/')
+
 
     def test_main_page_returns_200_status_code(self): #this func tests that the mainpage returns 200 status code.
-        self.assertEqual(self.response.status_code,200)
+        self.client.force_login(self.user)
+        response=self.client.get(self.url)
+        self.assertEqual(response.status_code,200)
 
 
     def test_main_page_uses_the_correct_template(self): #this func test that the main page uses the correct template.
-        self.assertTemplateUsed(self.response,template_name="main_page.html")
+        self.client.force_login(self.user)
+        response=self.client.get(self.url)
+        self.assertTemplateUsed(response,template_name="main_page.html")
     
     def test_main_page_link_returns_200_status_code(self): #this func test that the user will redirect to a working page with 200 status code.
+        self.client.force_login(self.user)
+        response=self.client.get(self.url)
         self.response_main_page_links=[]
-        html_bytes = self.response.content
+        html_bytes = response.content
         html_str = html_bytes.decode('utf-8')
         matches = re.findall(r'href="([^"]+)"', html_str)
         for i in range(0,len(matches)):

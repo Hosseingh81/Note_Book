@@ -12,7 +12,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 
 #this class is for the first page that you face.the url is ./note_book
-class main_page_view(TemplateView):
+class main_page_view(LoginRequiredMixin,TemplateView):
     template_name = "main_page.html"
 
 #this class is for the new note page that contains a form.
