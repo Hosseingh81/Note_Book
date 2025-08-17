@@ -4,6 +4,7 @@ from .django_modelfield_tests_funcs import *
 import re
 from Note_Book_app.models import Note
 from django.contrib.messages import get_messages
+from django.contrib.auth.models import User
 
 
 
@@ -16,6 +17,7 @@ class Front_tests(TestCase):
         self.url=reverse("Note_Book_app:main_page")
         self.response=self.client.get(self.url)
         self.url_new_note= reverse("Note_Book_app:new_note")
+        self.user=User.objects.create_user(username="user", password="1234")
 
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>        main_page_test
@@ -44,6 +46,7 @@ class Front_tests(TestCase):
 
 
     def test_new_note_page_post_data_returns_302_status_code(self): #this func tests that the new note page posts the data in its form return 302 status code.
+        self.client.force_login(self.user)
         form_data = {
         'name': 'My Test Note',
         'note': 'This is the content sent from the frontend.'
@@ -53,6 +56,7 @@ class Front_tests(TestCase):
  
 
     def test_new_note_page_post_data_saved_correctly_in_database(self): #This function verifies if the data posted to the backend is stored correctly.
+        self.client.force_login(self.user)
         form_data = {
         'name': 'My Test Note',
         'note': 'This is the content sent from the frontend.'
@@ -209,5 +213,17 @@ class Front_tests(TestCase):
         redirected_url_from_delete_note_confimation_page=delete_note_confirmation_post_res.headers.get('Location')
         response=self.client.get(redirected_url_from_delete_note_confimation_page)
         self.assertContains(response,messages[0])
+
+
+
+    def test_note_creation_assigns_correct_user(self):
+        self.client.force_login(self.user)
+        form_data = {
+        'name': 'Edited Note 0',
+        'note': 'edited context 0.'
+        }
+        new_note_page_post_res=self.client.post(path=self.url_new_note, data=form_data )
+        self.assertEqual(new_note_page_post_res.wsgi_request.user,Note.objects.last().user)
+
         
 

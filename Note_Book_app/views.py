@@ -5,7 +5,8 @@ from .models import Note
 from django.views.generic import ListView,DetailView
 from django.urls import reverse_lazy
 from django.contrib import messages
-from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 # Create your views here.
@@ -19,6 +20,10 @@ class new_note_view(CreateView):
     template_name = "new_note.html"
     model = Note
     fields = ["name","note"]
+
+    def form_valid(self, form):
+        form.instance.user=self.request.user
+        return super().form_valid(form)
 
 #this is for the previous_note page that contains links to saved notes.
 class previous_notes_view(ListView):
@@ -55,3 +60,9 @@ class delete_note_view(DeleteView):
         response=super().post(request, *args, **kwargs)
         messages.success(request,f"the {self.object} was successfully deleted!")
         return response
+
+
+class SignUpView(CreateView):
+    form_class = UserCreationForm
+    success_url = reverse_lazy('login') 
+    template_name = 'registration/signup.html'

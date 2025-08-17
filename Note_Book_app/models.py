@@ -1,5 +1,9 @@
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import User
+
+
+
 
 # Create your models here.
 
@@ -12,6 +16,7 @@ class Note(models.Model):
     note=models.TextField(verbose_name="write your note here.") #this is the note field of the model.
     Published_at=models.DateTimeField(auto_now_add=True) #this is published_at field of the model that saves the time whenever note is published.
     Update_at=models.DateTimeField(auto_now=True) #this is Upadted_at field of the model that stores the time when the object is updated.
+    user=models.ForeignKey(User, on_delete=models.CASCADE,null=True,blank=True)
 
     def __str__(self): # shows the name field of the note.
         return self.name
