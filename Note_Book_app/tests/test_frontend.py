@@ -156,8 +156,16 @@ class Front_tests(TestCase):
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>        edit_note_page_test
 
-        
+    def test_edit_note_page_page_redirects_anonymous_user_to_login(self): #Verfies that anonymous user can't access the edit_note_page_page and it will redirect to login_page.
+        Note.objects.create(note="note 0")
+        note_id=Note.objects.last().id
+        edit_note_page_url=reverse("Note_Book_app:edit_note",kwargs={'pk':note_id})
+        response=self.client.get(edit_note_page_url)
+        self.assertEqual(response.status_code,302)
+        self.assertEqual(response.headers.get('Location'),'/accounts/login/?next=/note_book/edit_note/1')
+
     def test_edit_note_page_returns_200_status_code(self): #Verifies that edit_note page returns 200 status code.
+        self.client.force_login(self.user)
         Note.objects.create(note="note 0")
         note_id=Note.objects.last().id
         edit_note_res=self.client.get(reverse("Note_Book_app:edit_note",kwargs={'pk':note_id}))
@@ -165,6 +173,7 @@ class Front_tests(TestCase):
 
 
     def test_edit_note_page_post_request_retruns_302_status_code(self): #Verifies that a POST request to the edit_note page returns a 302 status code.
+        self.client.force_login(self.user)
         Note.objects.create(name="note 0",note='context 0')
         note_id=Note.objects.last().id
         form_data = {
@@ -177,6 +186,7 @@ class Front_tests(TestCase):
 
 
     def test_edit_note_post_updates_note_object(self): #Verifies that submitting the edit form successfully updates the note in the database.
+        self.client.force_login(self.user)
         Note.objects.create(name="note 0",note='context 0')
         note_id=Note.objects.last().id
         form_data = {
@@ -188,18 +198,19 @@ class Front_tests(TestCase):
         self.assertEqual(form_data["note"],Note.objects.last().note)
 
 
-    # def test_editing_note_displays_success_message(self): #Verifies that a success message is displayed after a note is edited.
-    #     Note.objects.create(note="note 0")
-    #     edit_note__url=reverse("Note_Book_app:edit_note",kwargs={'pk':Note.objects.get(note='note 0').id})
-    #     form_data = {
-    #     'name': 'Edited Note 0',
-    #     'note': 'edited context 0.'
-    #     }
-    #     edit_note_post_res=self.client.post(edit_note__url,kwargs={'pk':Note.objects.get(note='note 0').id},data=form_data)
-    #     messages = list(get_messages(edit_note_post_res.wsgi_request))
-    #     redirected_url_from_edit_note_page=edit_note_post_res.headers.get('Location')
-    #     response=self.client.get(redirected_url_from_edit_note_page)
-    #     self.assertContains(response,messages[0])   
+    def test_editing_note_displays_success_message(self): #Verifies that a success message is displayed after a note is edited.
+        self.client.force_login(self.user)
+        Note.objects.create(note="note 0")
+        edit_note__url=reverse("Note_Book_app:edit_note",kwargs={'pk':Note.objects.get(note='note 0').id})
+        form_data = {
+        'name': 'Edited Note 0',
+        'note': 'edited context 0.'
+        }
+        edit_note_post_res=self.client.post(edit_note__url,kwargs={'pk':Note.objects.get(note='note 0').id},data=form_data)
+        messages = list(get_messages(edit_note_post_res.wsgi_request))
+        redirected_url_from_edit_note_page=edit_note_post_res.headers.get('Location')
+        response=self.client.get(redirected_url_from_edit_note_page)
+        self.assertContains(response,messages[0])   
 
 
 

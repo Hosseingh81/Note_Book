@@ -40,7 +40,7 @@ class note_view(LoginRequiredMixin,DetailView):
 
 
 #This function edit notes.
-class edit_note_view(UpdateView):
+class edit_note_view(LoginRequiredMixin,UpdateView):
     model=Note
     template_name='new_note.html'
     fields=["name","note"]
