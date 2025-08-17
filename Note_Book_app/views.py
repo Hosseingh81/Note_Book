@@ -26,7 +26,7 @@ class new_note_view(LoginRequiredMixin,CreateView):
         return super().form_valid(form)
 
 #this is for the previous_note page that contains links to saved notes.
-class previous_notes_view(ListView):
+class previous_notes_view(LoginRequiredMixin,ListView):
     template_name="previous_notes.html"
     model= Note
     paginate_by=10
