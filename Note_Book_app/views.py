@@ -16,7 +16,7 @@ class main_page_view(LoginRequiredMixin,TemplateView):
     template_name = "main_page.html"
 
 #this class is for the new note page that contains a form.
-class new_note_view(CreateView):
+class new_note_view(LoginRequiredMixin,CreateView):
     template_name = "new_note.html"
     model = Note
     fields = ["name","note"]

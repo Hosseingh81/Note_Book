@@ -54,7 +54,11 @@ class Front_tests(TestCase):
 
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>        new_note_page_test
-
+    
+    def test_new_note_page_redirects_anonymous_user_to_login(self): #Verfies that anonymous user can't access the new_note_page and it will redirect to login_page.
+        self.response=self.client.get(self.url_new_note)
+        self.assertEqual(self.response.status_code,302)
+        self.assertEqual(self.response.headers.get('Location'),'/accounts/login/?next=/note_book/new_note')
 
 
     def test_new_note_page_post_data_returns_302_status_code(self): #this func tests that the new note page posts the data in its form return 302 status code.
