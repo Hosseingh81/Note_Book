@@ -103,7 +103,7 @@ class Front_tests(TestCase):
     def test_previous_page_shows_the_list_of_notes_correctly(self): #Verifies that the note list page displays all notes correctly.
         self.client.force_login(self.user)
         for i in range(0,10):
-            Note.objects.create(name=f'note{i}',note=f'context{i}')
+            Note.objects.create(name=f'note{i}',note=f'context{i}',user=self.user)
         previous_page_url=reverse("Note_Book_app:previous_notes")
         res_previous_page=self.client.get(previous_page_url)
         html_str=res_previous_page.content.decode('utf-8')
@@ -124,7 +124,7 @@ class Front_tests(TestCase):
     def test_previous_note_page_links_to_related_notes_return_200_status_code(self): # Verifies that the Previous_note page links is related correctly to its note.
         self.client.force_login(self.user)
         for i in range(0,10):
-            Note.objects.create(name=f'note{i}',note=f'context{i}')
+            Note.objects.create(name=f'note{i}',note=f'context{i}',user=self.user)
         previous_page_url=reverse("Note_Book_app:previous_notes")
         res_previous_page=self.client.get(previous_page_url)
         html_str = res_previous_page.content.decode('utf-8')
@@ -148,7 +148,7 @@ class Front_tests(TestCase):
     def test_detail_note_page_shows_the_expected_note(self): #Verfies that the new_note page shows the expected note.
         self.client.force_login(self.user)
         for i in range(0,10):
-            Note.objects.create(name=f'note{i}',note=f'context{i}')
+            Note.objects.create(name=f'note{i}',note=f'context{i}',user=self.user)
         previous_page_url=reverse("Note_Book_app:previous_notes")
         res_previous_page=self.client.get(previous_page_url)
         objects_name=[]
@@ -175,7 +175,7 @@ class Front_tests(TestCase):
 
     def test_edit_note_page_returns_200_status_code(self): #Verifies that edit_note page returns 200 status code.
         self.client.force_login(self.user)
-        Note.objects.create(note="note 0")
+        Note.objects.create(note="note 0",user=self.user)
         note_id=Note.objects.last().id
         edit_note_res=self.client.get(reverse("Note_Book_app:edit_note",kwargs={'pk':note_id}))
         self.assertEqual(edit_note_res.status_code,200)
@@ -183,7 +183,7 @@ class Front_tests(TestCase):
 
     def test_edit_note_page_post_request_retruns_302_status_code(self): #Verifies that a POST request to the edit_note page returns a 302 status code.
         self.client.force_login(self.user)
-        Note.objects.create(name="note 0",note='context 0')
+        Note.objects.create(name="note 0",note='context 0',user=self.user)
         note_id=Note.objects.last().id
         form_data = {
         'name': 'Edited Note',
@@ -196,7 +196,7 @@ class Front_tests(TestCase):
 
     def test_edit_note_post_updates_note_object(self): #Verifies that submitting the edit form successfully updates the note in the database.
         self.client.force_login(self.user)
-        Note.objects.create(name="note 0",note='context 0')
+        Note.objects.create(name="note 0",note='context 0',user=self.user)
         note_id=Note.objects.last().id
         form_data = {
         'name': 'Edited Note 0',
@@ -209,7 +209,7 @@ class Front_tests(TestCase):
 
     def test_editing_note_displays_success_message(self): #Verifies that a success message is displayed after a note is edited.
         self.client.force_login(self.user)
-        Note.objects.create(note="note 0")
+        Note.objects.create(note="note 0",user=self.user)
         edit_note__url=reverse("Note_Book_app:edit_note",kwargs={'pk':Note.objects.get(note='note 0').id})
         form_data = {
         'name': 'Edited Note 0',
@@ -236,7 +236,7 @@ class Front_tests(TestCase):
 
     def test_detail_page_contains_valid_delete_link(self): #Verifies that the detail_page contains valid delete_link and delete_link returns 200 status code.
         self.client.force_login(self.user)
-        Note.objects.create(note="note 0")
+        Note.objects.create(note="note 0",user=self.user)
         note_id=Note.objects.last().id
         edit_note_res=self.client.get(reverse("Note_Book_app:note_detail_page",kwargs={'pk':note_id}))
         html_str=edit_note_res.content.decode('utf-8')
@@ -248,14 +248,14 @@ class Front_tests(TestCase):
 
     def test_delete_note_confirmation_page_uses_correct_template(self): #Verifies that the delete_note_confiramation_page uses the correct template.
         self.client.force_login(self.user)
-        Note.objects.create(note="note 0")
+        Note.objects.create(note="note 0",user=self.user)
         delete_note_confirmation_res=self.client.get(reverse("Note_Book_app:delete_note",kwargs={'pk':Note.objects.last().id}))
         self.assertTemplateUsed(delete_note_confirmation_res,template_name='delete_note_confirmation.html')
 
 
     def test_delete_note_confirmation_page_post_redirects_to_previous_notes_page_and_delete_the_specified_note(self): #Verifies that when the user accept the deletation, it will redirects to previous_notes page and it deletes the specified note.
         self.client.force_login(self.user)
-        Note.objects.create(note="note 0")
+        Note.objects.create(note="note 0",user=self.user)
         expected_redirect_url=reverse("Note_Book_app:previous_notes")
         note_id=Note.objects.get(note='note 0').id
         delete_note_confirmation_url=reverse("Note_Book_app:delete_note",kwargs={'pk':note_id})
@@ -269,7 +269,7 @@ class Front_tests(TestCase):
 
     def test_deleting_note_displays_success_message(self): #Verifies that a success message is displayed after a note is deleted.
         self.client.force_login(self.user)
-        Note.objects.create(note="note 0")
+        Note.objects.create(note="note 0",user=self.user)
         delete_note_confirmation_url=reverse("Note_Book_app:delete_note",kwargs={'pk':Note.objects.get(note='note 0').id})
         delete_note_confirmation_post_res=self.client.post(delete_note_confirmation_url,kwargs={'pk':Note.objects.get(note='note 0').id})
         messages = list(get_messages(delete_note_confirmation_post_res.wsgi_request))

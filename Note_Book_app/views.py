@@ -24,6 +24,9 @@ class new_note_view(LoginRequiredMixin,CreateView):
     def form_valid(self, form):
         form.instance.user=self.request.user
         return super().form_valid(form)
+    
+    def get_queryset(self):
+        return Note.objects.filter(user=self.request.user)
 
 #this is for the previous_note page that contains links to saved notes.
 class previous_notes_view(LoginRequiredMixin,ListView):
@@ -32,11 +35,17 @@ class previous_notes_view(LoginRequiredMixin,ListView):
     paginate_by=10
     ordering=['-Published_at']
 
+    def get_queryset(self):
+        return Note.objects.filter(user=self.request.user)
+
 #this function shows the detail of a created view.
 class note_view(LoginRequiredMixin,DetailView):
     model=Note
     template_name='note_detail.html'
     context_object_name = 'note'
+
+    def get_queryset(self):
+        return Note.objects.filter(user=self.request.user)
 
 
 #This function edit notes.
@@ -49,6 +58,9 @@ class edit_note_view(LoginRequiredMixin,UpdateView):
         response=super().post(request, *args, **kwargs)
         messages.success(request,f"the {self.object} was successfully edited!")
         return response
+    
+    def get_queryset(self):
+        return Note.objects.filter(user=self.request.user)
 
 #this function delete notes.
 class delete_note_view(LoginRequiredMixin,DeleteView):
@@ -60,6 +72,9 @@ class delete_note_view(LoginRequiredMixin,DeleteView):
         response=super().post(request, *args, **kwargs)
         messages.success(request,f"the {self.object} was successfully deleted!")
         return response
+    
+    def get_queryset(self):
+        return Note.objects.filter(user=self.request.user)
 
 
 class SignUpView(CreateView):
