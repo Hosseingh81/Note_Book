@@ -133,6 +133,17 @@ class Front_tests(TestCase):
         for i in range(0,10):
             self.assertEqual(self.client.get(hrefs[i]).status_code,200)
 
+    def test_previous_note_page_only_shows_own_notes(self): #Verifies that the previous_note_page only shows the logged in user.
+        self.client.force_login(self.user)
+        user2= User.objects.create_user(username='test2', password='1234')
+        Note.objects.create(name='note of user',note='context of user',user=self.user)
+        Note.objects.create(name='note of user2',note='context of user2',user=user2)
+        previous_page_url=reverse("Note_Book_app:previous_notes")
+        res_previous_page=self.client.get(previous_page_url)
+        self.assertContains(res_previous_page,'note of user')
+        self.assertNotContains(res_previous_page,'note of user2')
+        
+
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>        detail_note_page_test
 
