@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
-from .models import Note
+from .models import Note,Profile
 from django.views.generic import ListView,DetailView
 from django.urls import reverse_lazy
 from django.contrib import messages
@@ -81,3 +81,13 @@ class SignUpView(CreateView):
     form_class = UserCreationForm
     success_url = reverse_lazy('login') 
     template_name = 'registration/signup.html'
+
+
+class ProfileView(LoginRequiredMixin,DetailView):
+    model=Profile
+    template_name='profile.html'
+    context_object_name = 'profile'
+
+    def get_object(self, queryset=None):
+
+        return self.request.user.profile

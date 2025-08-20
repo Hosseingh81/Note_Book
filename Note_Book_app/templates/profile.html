@@ -1,0 +1,14 @@
+{% if user.is_authenticated %}
+  <span>سلام، {{ user.username }}!</span> |
+
+  <a href="{% url 'Note_Book_app:profile' %}">پروفایل من</a> |
+  
+  <a href="{% url 'password_change' %}">تغییر رمز عبور</a> |
+  
+  <form action="{% url 'logout' %}" method="post" style="display: inline;">
+    {% csrf_token %}
+    <button type="submit">خروج</button>
+  </form>
+{% else %}
+  <a href="{% url 'login' %}">ورود</a>
+{% endif %}

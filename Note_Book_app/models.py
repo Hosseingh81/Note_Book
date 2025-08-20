@@ -31,3 +31,13 @@ class Note(models.Model):
         if not self.name:
             self.name = f"note {self.pk}"
             super().save(update_fields=['name'])
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    bio = models.TextField(max_length=500, blank=True)
+    profile_picture = models.ImageField(upload_to='profile_pics/', default='default.jpg')
+
+    def __str__(self):
+        return f'{self.user.username} Profile'
+    

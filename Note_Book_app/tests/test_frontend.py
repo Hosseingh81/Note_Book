@@ -287,6 +287,29 @@ class Front_tests(TestCase):
         redirected_url_from_delete_note_confimation_page=delete_note_confirmation_post_res.headers.get('Location')
         response=self.client.get(redirected_url_from_delete_note_confimation_page)
         self.assertContains(response,messages[0])
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> profile page test
+    def test_profile_page_page_redirects_anonymous_user_to_login(self): #Verfies that anonymous user can't access the profile_page_page and it will redirect to login_page.
+        profile_page_url=reverse("Note_Book_app:profile")
+        response=self.client.get(profile_page_url)
+        self.assertEqual(response.status_code,302)
+        self.assertEqual(response.headers.get('Location'),'/accounts/login/?next=/note_book/profile/')
+
+
+    def test_progile_page_returns_200_status_code(self): #Verfies thata profile page returns 200 status code when the user is logged in.
+        self.client.force_login(self.user)
+        profile_page_url=reverse("Note_Book_app:profile")
+        response=self.client.get(profile_page_url)
+        self.assertEqual(response.status_code,200)
+
+    
+    def test_profile_page_displays_user_info(self): #test profile page shows the user info correctly.
+        User.objects.get_or_create(username='test2',password='123')
+        self.client.force_login(self.user)
+        profile_page_url=reverse("Note_Book_app:profile")
+        response=self.client.get(profile_page_url)
+        self.assertContains(response,User.objects.get(username='test'))
+        self.assertNotContains(response,User.objects.get(username='test2'))
+
 
 
 
