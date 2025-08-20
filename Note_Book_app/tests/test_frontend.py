@@ -310,6 +310,14 @@ class Front_tests(TestCase):
         self.assertContains(response,User.objects.get(username='test'))
         self.assertNotContains(response,User.objects.get(username='test2'))
 
+    def test_profile_page_use_the_correct_template(self): #Verifies that the profile_page uses the correct template.
+        self.client.force_login(self.user)
+        profile_page_url=reverse("Note_Book_app:profile")
+        response=self.client.get(profile_page_url)
+        self.assertTemplateUsed(response,template_name='profile.html')
+
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> edit_profiel_page
+
 
 
 
