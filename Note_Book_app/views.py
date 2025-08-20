@@ -89,5 +89,17 @@ class ProfileView(LoginRequiredMixin,DetailView):
     context_object_name = 'profile'
 
     def get_object(self, queryset=None):
-
         return self.request.user.profile
+    
+
+class edit_ProfileView(LoginRequiredMixin,UpdateView):
+    model=Profile
+    template_name='edit_profile.html'
+    fields = ['bio','profile_picture']
+    success_url = reverse_lazy("Note_Book_app:profile")
+
+    def get_object(self, queryset=None):
+        return self.request.user.profile
+
+    
+

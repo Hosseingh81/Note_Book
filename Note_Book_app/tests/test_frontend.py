@@ -5,6 +5,9 @@ import re
 from Note_Book_app.models import Note
 from django.contrib.messages import get_messages
 from django.contrib.auth.models import User
+from PIL import Image
+from io import BytesIO
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 
 
@@ -318,8 +321,40 @@ class Front_tests(TestCase):
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> edit_profiel_page
 
+    def test_edit_profile_page_page_redirects_anonymous_user_to_login(self): #Verfies that anonymous user can't access the edit_profile_page_page and it will redirect to login_page.
+        edit_profile_page_url=reverse("Note_Book_app:edit_profile")
+        response=self.client.get(edit_profile_page_url)
+        self.assertEqual(response.status_code,302)
+        self.assertEqual(response.headers.get('Location'),'/accounts/login/?next=/note_book/edit_profile/')
 
+    def test_progile_page_returns_200_status_code(self): #Verfies that edit_profile page returns 200 status code when the user is logged in.
+        self.client.force_login(self.user)
+        edit_profile_page_url=reverse("Note_Book_app:edit_profile")
+        response=self.client.get(edit_profile_page_url)
+        self.assertEqual(response.status_code,200)
 
+    def test_edit_profile_page_use_the_correct_template(self): #Verifies that the edit_profile_page uses the correct template.
+        self.client.force_login(self.user)
+        edit_profile_page_url=reverse("Note_Book_app:edit_profile")
+        response=self.client.get(edit_profile_page_url)
+        self.assertTemplateUsed(response,template_name='edit_profile.html')
+
+    def test_edit_profile_post_redirects_on_success_url(self): # Verifies that a successful POST request to the edit profile form redirects the user.
+        self.client.force_login(self.user)
+        edit_profile_page_url=reverse("Note_Book_app:edit_profile")
+        image_data = BytesIO()
+        image = Image.new('RGB', (100, 100), 'white')
+        image.save(image_data, format='png')
+        image_data.seek(0)
+        form_data={
+            "bio":"my bio",
+            'profile_picture': SimpleUploadedFile("test.png", image_data.read(), content_type='image/png')
+        }
+
+        edit_profile_res=self.client.post(path=edit_profile_page_url,data=form_data)
+        print(edit_profile_res.headers.get('Location'))
+        self.assertEqual(edit_profile_res.status_code,302)
+        self.assertEqual(edit_profile_res.headers.get('Location'),'/note_book/profile/')
 
 
 

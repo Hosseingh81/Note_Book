@@ -1,0 +1,14 @@
+<div class="container mt-4">
+    <h2>ویرایش پروفایل</h2>
+    <hr>
+
+    <form method="post" enctype="multipart/form-data">
+
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <br>
+        <button type="submit" class="btn btn-primary">ذخیره تغییرات</button>
+    </form>
+</div>
