@@ -1,18 +1,19 @@
-from django.test import TestCase
+from django.test import TestCase,override_settings
 from django.urls import reverse
 from .django_modelfield_tests_funcs import *
 import re
-from Note_Book_app.models import Note
+from Note_Book_app.models import Note,Profile
 from django.contrib.messages import get_messages
 from django.contrib.auth.models import User
 from PIL import Image
 from io import BytesIO
 from django.core.files.uploadedfile import SimpleUploadedFile
-
+import tempfile
+import shutil
 
 
 # Create your tests here.
-
+@override_settings(MEDIA_ROOT=tempfile.mkdtemp())
 class Front_tests(TestCase):
     @classmethod
     def setUpClass(cls):
@@ -347,16 +348,39 @@ class Front_tests(TestCase):
         image.save(image_data, format='png')
         image_data.seek(0)
         form_data={
-            "bio":"my bio",
-            'profile_picture': SimpleUploadedFile("test.png", image_data.read(), content_type='image/png')
+        "bio":"my bio",
+        'profile_picture': SimpleUploadedFile("test.png", image_data.read(), content_type='image/png')
         }
-
         edit_profile_res=self.client.post(path=edit_profile_page_url,data=form_data)
-        print(edit_profile_res.headers.get('Location'))
         self.assertEqual(edit_profile_res.status_code,302)
         self.assertEqual(edit_profile_res.headers.get('Location'),'/note_book/profile/')
 
+    def test_edit_profile_post_updates_database(self): #Verifies that the database update successfuly with the correct data.
+        self.client.force_login(self.user)
+        edit_profile_page_url=reverse("Note_Book_app:edit_profile")
+        image_data = BytesIO()
+        image = Image.new('RGB', (100, 100), 'white')
+        image.save(image_data, format='png')
+        image_data.seek(0)
+        original_content = image_data.read()
+        image_data.seek(0)
+        form_data={
+            "bio":"my bio",
+            'profile_picture': SimpleUploadedFile("test.png", image_data.read(), content_type='image/png')
+            }
+        edit_profile_res=self.client.post(path=edit_profile_page_url,data=form_data)
+        updated_profile = Profile.objects.get(user=self.user)
+        with updated_profile.profile_picture.open('rb') as saved_file:
+            saved_content = saved_file.read()
+        self.assertEqual(original_content,saved_content)
+        self.assertEqual(form_data['bio'],updated_profile.bio)
 
 
         
+
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(tempfile.gettempdir(), ignore_errors=True)
+        super().tearDownClass()
 
