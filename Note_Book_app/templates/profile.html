@@ -7,7 +7,11 @@
   
 <li>    <a href="{% url 'Note_Book_app:edit_profile' %}">edit profile</a></li> |
 
+<li>         bio:{{profile.bio}}</li>
+
 <li>    <img src="{{ profile.profile_picture.url }}" alt="عکس پروفایل" width="500"></li>
+
+
   </ul>
   
   <form action="{% url 'logout' %}" method="post" style="display: inline;">
