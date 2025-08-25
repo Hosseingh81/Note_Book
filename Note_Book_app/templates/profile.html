@@ -1,9 +1,14 @@
 {% if user.is_authenticated %}
   <span>سلام، {{ user.username }}!</span> |
-
-  <a href="{% url 'Note_Book_app:profile' %}">پروفایل من</a> |
+  <ul>
+<li>  <a href="{% url 'Note_Book_app:profile' %}">پروفایل من</a></li> |
   
-  <a href="{% url 'password_change' %}">تغییر رمز عبور</a> |
+<li> <a href="{% url 'password_change' %}">تغییر رمز عبور</a></li> |
+  
+<li>    <a href="{% url 'Note_Book_app:edit_profile' %}">edit profile</a></li> |
+
+<li>    <img src="{{ profile.profile_picture.url }}" alt="عکس پروفایل" width="500"></li>
+  </ul>
   
   <form action="{% url 'logout' %}" method="post" style="display: inline;">
     {% csrf_token %}

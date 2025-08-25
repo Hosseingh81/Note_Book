@@ -131,4 +131,4 @@ if 'test' in sys.argv or 'pytest' in sys.argv:
     PASSWORD_HASHERS = (
         'django.contrib.auth.hashers.MD5PasswordHasher',
     )
-
+LOGIN_REDIRECT_URL = '/note_book/profile/'
